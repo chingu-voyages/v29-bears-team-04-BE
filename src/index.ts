@@ -13,6 +13,10 @@ const main = async() => {
       credentials: true
     })
   );
+
+  app.get('/', (_, res) => {
+    res.send("connected")
+  });
   
   app.post('/register', async (req, res): Promise<User> => {
     const { name, email, password } = req.body;
@@ -36,4 +40,4 @@ main().catch((err) => {
   console.log(`ERROR: ${err}`)
 }).finally(async () => {
   await prisma.$disconnect()
-})
+});
