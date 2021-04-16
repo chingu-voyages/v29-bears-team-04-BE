@@ -15,5 +15,23 @@ model User {
   email       String   @unique
   password    String
   name        String?
+  photos      Photo[]
+  collections Collection[]
 }
 
+model Photo {
+  id          Int      @default(autoincrement()) @id
+  title       String
+  imageUrl    String   
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+  collections Collection[]
+}
+
+model Collection {
+  id          Int      @default(autoincrement()) @id
+  title       String
+  photos      Photo[]  
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+}
