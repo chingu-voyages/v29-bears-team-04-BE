@@ -1,12 +1,13 @@
 import express from 'express';
 import cors from 'cors';
-import { PrismaClient, User } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
+import UserRoutes from './routes/users'
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient();
 const app = express();
+app.use(express.json());
 
 const main = async() => {
-  app.use(express.json())
   app.use(
     cors({
       origin: 'http://localhost:3000',
@@ -18,18 +19,7 @@ const main = async() => {
     res.send("connected")
   });
   
-  app.post('/register', async (req, res): Promise<User> => {
-    const { name, email, password } = req.body;
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password
-      }
-    });
-    res.send(newUser);
-    return newUser;
-  });
+  app.use('/users', UserRoutes);
   
   app.listen(process.env.PORT || 4000, () => {
     console.log('listening on port 4000')
