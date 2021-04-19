@@ -8,20 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUsers = exports.registerUser = void 0;
 const index_1 = require("../index");
-const registerUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const argon2_1 = __importDefault(require("argon2"));
+const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    console.log(name, email, password);
+    const hashedPassword = yield argon2_1.default.hash(password);
     try {
         const newUser = yield index_1.prisma.user.create({
             data: {
                 name,
                 email,
-                password
+                password: hashedPassword
             }
         });
+        req.session.userId = newUser.id;
         return res.status(201).json({
             success: true,
             data: newUser,
