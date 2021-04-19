@@ -43,10 +43,11 @@ export const login = async (req: Request, res: Response) => {
   
     if(!user){
       return res.status(404).json({
-          errors: [{
-            message: "Email incorrect/Email not found.",
-            field: "email"
-          }]
+        success: false,
+        errors: [{
+          message: "Email incorrect/Email not found.",
+          field: "email"
+        }]
       })
     };
   
@@ -54,6 +55,7 @@ export const login = async (req: Request, res: Response) => {
   
     if(!isValid){
       return res.status(401).json({
+        success: false,
         errors: [{
           message: "Incorrect password",
           field: "password"
@@ -73,6 +75,25 @@ export const login = async (req: Request, res: Response) => {
       success: false,
     })
   }
+};
+
+// **** LOGOUT ****
+
+export const logout = async(req: Request, res: Response) => {
+  return new Promise((resolve) => {
+    req.session.destroy((err) => {
+      if(err) {
+        resolve(false)
+        return res.status(500).json({
+          error: err
+        });
+      }
+      resolve(true)
+      return res.status(200).json({
+        success: true
+      });
+    })
+  })
 }
 
 // **** GET ALL USERS ****
