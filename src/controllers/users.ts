@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../index';
 import { RouteArgs } from '../types/routeArgs';
 import argon2 from 'argon2';
+import { COOKIE_NAME } from '../constants';
 
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
@@ -21,7 +22,6 @@ export const registerUser = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       success: true,
-      data: newUser,
     })
   } catch (error) {
     console.log(error);
@@ -67,7 +67,6 @@ export const login = async (req: Request, res: Response) => {
   
     return res.status(200).json({
       success: true,
-      data: user
     });
   } catch (error) {
     console.log(error);
@@ -82,6 +81,7 @@ export const login = async (req: Request, res: Response) => {
 export const logout = async(req: Request, res: Response) => {
   return new Promise((resolve) => {
     req.session.destroy((err) => {
+      res.clearCookie(COOKIE_NAME)
       if(err) {
         resolve(false)
         return res.status(500).json({
@@ -91,9 +91,40 @@ export const logout = async(req: Request, res: Response) => {
       resolve(true)
       return res.status(200).json({
         success: true
-      });
+      })
     })
   })
+}
+
+// **** GET ME ****
+
+export const me = async(req: Request, res: Response) => {
+  if(!req.session.userId) {
+    return null
+  };
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.session.userId
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+      }
+    });
+    return res.status(200).json({
+      success: true,
+      data: user
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
 }
 
 // **** GET ALL USERS ****
