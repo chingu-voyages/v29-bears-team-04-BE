@@ -1,10 +1,13 @@
 import express from 'express';
-import { registerUser, getAllUsers } from '../controllers/users';
+import { registerUser, login } from '../controllers/users';
 const router = express.Router({mergeParams: true});
 
 router
-  .route('/')
+  .route('/register')
   .post(registerUser)
-  .get(getAllUsers)
+
+router
+  .route('/login')
+  .post(login)
 
 export default router;
