@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, login } from '../controllers/users';
+import { registerUser, login, logout, me } from '../controllers/users';
 const router = express.Router({mergeParams: true});
 
 router
@@ -9,5 +9,13 @@ router
 router
   .route('/login')
   .post(login)
+
+router 
+  .route('/logout')
+  .post(logout)
+
+router
+  .route('/me')
+  .get(me)
 
 export default router;
