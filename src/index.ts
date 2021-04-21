@@ -2,10 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import UserRoutes from './routes/users';
+import PhotoRoutes from './routes/photo';
 import session from 'express-session';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 import { COOKIE_NAME, __prod__ } from './constants';
+import multer from 'multer';
+const multParse = multer();
 
 export const prisma = new PrismaClient();
 const app = express();
@@ -17,6 +20,7 @@ const main = async() => {
   const redis = new Redis();
   // Body Parser:
   app.use(express.json());
+  app.use(express.urlencoded({extended: false}));
   // Cors Config:
   app.use(
     cors({
@@ -49,6 +53,7 @@ const main = async() => {
   });
   
   app.use('/users', UserRoutes);
+  app.use('/photos', PhotoRoutes);
   
   // Server:
   app.listen(process.env.PORT || 4000, () => {

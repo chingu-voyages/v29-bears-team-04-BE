@@ -17,16 +17,20 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const client_1 = require("@prisma/client");
 const users_1 = __importDefault(require("./routes/users"));
+const photo_1 = __importDefault(require("./routes/photo"));
 const express_session_1 = __importDefault(require("express-session"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const constants_1 = require("./constants");
+const multer_1 = __importDefault(require("multer"));
+const multParse = multer_1.default();
 exports.prisma = new client_1.PrismaClient();
 const app = express_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default();
     app.use(express_1.default.json());
+    app.use(express_1.default.urlencoded({ extended: false }));
     app.use(cors_1.default({
         origin: 'http://localhost:3000',
         credentials: true
@@ -51,6 +55,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         res.send("connected");
     });
     app.use('/users', users_1.default);
+    app.use('/photos', photo_1.default);
     app.listen(process.env.PORT || 4000, () => {
         console.log('listening on port 4000');
     });
