@@ -10,7 +10,6 @@ import { COOKIE_NAME, __prod__ } from './constants';
 export const prisma = new PrismaClient();
 const app = express();
 
-
 const main = async() => {
   // Redis:
   const RedisStore = connectRedis(session);
