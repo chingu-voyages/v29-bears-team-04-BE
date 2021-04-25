@@ -131,13 +131,24 @@ export const me = async(req: Request, res: Response) => {
 
 export const getAllUsers = async (args: RouteArgs) => {
   const { res } = args;
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      password: false,
-    }
-  });
-  res.send(users);
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+      }
+    });
+    return res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
 }

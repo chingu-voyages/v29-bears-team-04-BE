@@ -130,15 +130,26 @@ const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.me = me;
 const getAllUsers = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const { res } = args;
-    const users = yield index_1.prisma.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            password: false,
-        }
-    });
-    res.send(users);
+    try {
+        const users = yield index_1.prisma.user.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                password: false,
+            }
+        });
+        return res.status(200).json({
+            success: true,
+            data: users
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error
+        });
+    }
 });
 exports.getAllUsers = getAllUsers;
 //# sourceMappingURL=users.js.map
