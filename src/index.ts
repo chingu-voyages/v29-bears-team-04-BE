@@ -24,6 +24,7 @@ const main = async() => {
     })
   );
   // Express session config:
+  app.set("trust proxy", 1);
   app.use(
     session({
       name: COOKIE_NAME,
