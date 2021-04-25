@@ -13,7 +13,7 @@ const app = express();
 const main = async() => {
   // Redis:
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
   // Body Parser:
   app.use(express.json());
   // Cors Config:
