@@ -131,6 +131,13 @@ export const me = async(req: Request, res: Response) => {
 
 export const getAllUsers = async (args: RouteArgs) => {
   const { res } = args;
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: false,
+    }
+  });
   res.send(users);
 }

@@ -7,6 +7,9 @@ const express_1 = __importDefault(require("express"));
 const users_1 = require("../controllers/users");
 const router = express_1.default.Router({ mergeParams: true });
 router
+    .route('/')
+    .get(users_1.getAllUsers);
+router
     .route('/register')
     .post(users_1.registerUser);
 router

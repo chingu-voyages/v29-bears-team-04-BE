@@ -130,7 +130,14 @@ const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.me = me;
 const getAllUsers = (args) => __awaiter(void 0, void 0, void 0, function* () {
     const { res } = args;
-    const users = yield index_1.prisma.user.findMany();
+    const users = yield index_1.prisma.user.findMany({
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            password: false,
+        }
+    });
     res.send(users);
 });
 exports.getAllUsers = getAllUsers;
