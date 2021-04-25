@@ -1,6 +1,10 @@
 import express from 'express';
-import { registerUser, login, logout, me } from '../controllers/users';
+import { registerUser, login, logout, me, getAllUsers } from '../controllers/users';
 const router = express.Router({mergeParams: true});
+
+router
+  .route('/')
+  .get(getAllUsers)
 
 router
   .route('/register')
