@@ -36,7 +36,6 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         store: new RedisStore({
             client: redis,
             disableTouch: true,
-            url: 
         }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
