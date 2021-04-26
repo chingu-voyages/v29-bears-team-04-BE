@@ -69,8 +69,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         ;
         req.session.userId = user.id;
         return res.status(200).json({
-            success: true,
-            data: user
+            success: true
         });
     }
     catch (error) {
@@ -101,7 +100,13 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.logout = logout;
 const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userId) {
-        return null;
+        return res.status(401).json({
+            success: false,
+            error: {
+                field: "session",
+                message: "Your session has expired, please login again."
+            }
+        });
     }
     ;
     try {

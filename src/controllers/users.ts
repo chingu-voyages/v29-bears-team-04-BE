@@ -66,8 +66,7 @@ export const login = async (req: Request, res: Response) => {
     req.session.userId = user.id;
   
     return res.status(200).json({
-      success: true,
-      data: user
+      success: true
     });
   } catch (error) {
     console.log(error);
@@ -101,7 +100,13 @@ export const logout = async(req: Request, res: Response) => {
 
 export const me = async(req: Request, res: Response) => {
   if(!req.session.userId) {
-    return null
+    return res.status(401).json({
+      success: false,
+      error: {
+        field: "session",
+        message: "Your session has expired, please login again."
+      }
+    })
   };
   try {
     const user = await prisma.user.findUnique({
@@ -151,5 +156,4 @@ export const getAllUsers = async (args: RouteArgs) => {
       error: error
     })
   }
-
 }
