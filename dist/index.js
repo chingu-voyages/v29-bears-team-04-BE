@@ -25,7 +25,7 @@ exports.prisma = new client_1.PrismaClient();
 const app = express_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const RedisStore = connect_redis_1.default(express_session_1.default);
-    const redis = new ioredis_1.default(process.env.REDIS_URL);
+    const redis = new ioredis_1.default('redis://:p392d1779daa7bef5d67bea96c4bd6059ce0fb0e691707a34e6bf870024d1fa76@ec2-107-22-187-46.compute-1.amazonaws.com:17009');
     app.use(express_1.default.json());
     app.use(cors_1.default({
         origin: 'http://localhost:3000',
