@@ -25,26 +25,6 @@ const constants_1 = require("./constants");
 exports.prisma = new client_1.PrismaClient();
 const app = express_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    for (let i = 0; i < 25; i++) {
-        yield exports.prisma.photo.create({
-            data: {
-                title: "Title" + i,
-                imageUrl: "https://source.unsplash.com/random",
-                author: {
-                    connect: { id: 1 }
-                }
-            }
-        });
-        yield exports.prisma.photo.create({
-            data: {
-                title: "Title" + i,
-                imageUrl: "https://source.unsplash.com/random",
-                author: {
-                    connect: { id: 3 }
-                }
-            }
-        });
-    }
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
     app.use(express_1.default.json());

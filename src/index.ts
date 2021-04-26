@@ -12,26 +12,6 @@ export const prisma = new PrismaClient();
 const app = express();
 
 const main = async() => {
-  for(let i = 0; i < 25; i++){
-    await prisma.photo.create({
-      data: {
-        title: "Title" + i,
-        imageUrl: "https://source.unsplash.com/random",
-        author: {
-          connect: { id: 1 }
-        }
-      }
-    })
-    await prisma.photo.create({
-      data: {
-        title: "Title" + i,
-        imageUrl: "https://source.unsplash.com/random",
-        author: {
-          connect: { id: 3 }
-        }
-      }
-    })
-  }
   // Redis:
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
