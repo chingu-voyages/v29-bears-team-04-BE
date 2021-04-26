@@ -44,4 +44,23 @@ export const addPhoto = async(req: Request, res: Response) => {
       data: photo
     })
   }) 
+};
+
+//  **** GET ALL PHOTOS ****
+export const getAllPhotos = async(req: Request, res: Response) => {
+
+   try { 
+     const photos = await prisma.photo.findMany();
+     return res.status(200).json({
+        success: true,
+        data: photos
+      });
+   }
+   catch(err) {
+    console.log(err);
+    return res.status(500).json({
+      error: err
+    })
+   }
+   
 }

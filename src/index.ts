@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import UserRoutes from './routes/users';
+import PhotoRoutes from './routes/photo';
 import session from 'express-session';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
@@ -11,6 +12,26 @@ export const prisma = new PrismaClient();
 const app = express();
 
 const main = async() => {
+  for(let i = 0; i < 25; i++){
+    await prisma.photo.create({
+      data: {
+        title: "Title" + i,
+        imageUrl: "https://source.unsplash.com/random",
+        author: {
+          connect: { id: 1 }
+        }
+      }
+    })
+    await prisma.photo.create({
+      data: {
+        title: "Title" + i,
+        imageUrl: "https://source.unsplash.com/random",
+        author: {
+          connect: { id: 3 }
+        }
+      }
+    })
+  }
   // Redis:
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
@@ -50,6 +71,7 @@ const main = async() => {
   });
   
   app.use('/users', UserRoutes);
+  app.use('/photos', PhotoRoutes);
   
   // Server:
   app.listen(process.env.PORT || 4000, () => {

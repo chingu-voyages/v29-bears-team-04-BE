@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const client_1 = require("@prisma/client");
 const users_1 = __importDefault(require("./routes/users"));
+const photo_1 = __importDefault(require("./routes/photo"));
 const express_session_1 = __importDefault(require("express-session"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -24,6 +25,26 @@ const constants_1 = require("./constants");
 exports.prisma = new client_1.PrismaClient();
 const app = express_1.default();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    for (let i = 0; i < 25; i++) {
+        yield exports.prisma.photo.create({
+            data: {
+                title: "Title" + i,
+                imageUrl: "https://source.unsplash.com/random",
+                author: {
+                    connect: { id: 1 }
+                }
+            }
+        });
+        yield exports.prisma.photo.create({
+            data: {
+                title: "Title" + i,
+                imageUrl: "https://source.unsplash.com/random",
+                author: {
+                    connect: { id: 3 }
+                }
+            }
+        });
+    }
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
     app.use(express_1.default.json());
@@ -49,6 +70,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         res.send("connected");
     });
     app.use('/users', users_1.default);
+    app.use('/photos', photo_1.default);
     app.listen(process.env.PORT || 4000, () => {
         console.log('listening on port 4000');
     });
