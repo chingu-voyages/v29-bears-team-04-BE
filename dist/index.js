@@ -31,6 +31,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         origin: 'http://localhost:3000',
         credentials: true
     }));
+    app.set("trust proxy", 1);
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({
