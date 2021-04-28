@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllPhotos = exports.addPhoto = void 0;
+exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
 const multer_1 = __importDefault(require("../utils/multer"));
 const index_1 = require("../index");
 const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,7 +52,7 @@ const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         return res.status(201).json({
             success: true,
-            data: photo
+            photo
         });
     }));
 });
@@ -62,7 +62,7 @@ const getAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const photos = yield index_1.prisma.photo.findMany();
         return res.status(200).json({
             success: true,
-            data: photos
+            photos
         });
     }
     catch (err) {
@@ -73,4 +73,26 @@ const getAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getAllPhotos = getAllPhotos;
+const searchAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const photos = yield index_1.prisma.photo.findMany({
+            where: {
+                title: {
+                    contains: req.body.searchString
+                }
+            }
+        });
+        return res.status(200).json({
+            success: true,
+            photos
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: err
+        });
+    }
+});
+exports.searchAllPhotos = searchAllPhotos;
 //# sourceMappingURL=photo.js.map

@@ -28,10 +28,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
     app.use(express_1.default.json());
-    app.use(cors_1.default({
-        origin: 'http://localhost:3000',
-        credentials: true
-    }));
+    app.use(cors_1.default());
     app.set("trust proxy", 1);
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,

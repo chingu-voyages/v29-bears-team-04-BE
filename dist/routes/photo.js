@@ -12,5 +12,8 @@ router
 router
     .route('/')
     .get(photo_1.getAllPhotos);
+router
+    .route('/searchPhotos')
+    .post(photo_1.searchAllPhotos);
 exports.default = router;
 //# sourceMappingURL=photo.js.map

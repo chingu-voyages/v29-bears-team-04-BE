@@ -1,5 +1,5 @@
 import express from 'express';
-import { addPhoto, getAllPhotos } from '../controllers/photo';
+import { addPhoto, getAllPhotos, searchAllPhotos } from '../controllers/photo';
 const router = express.Router({mergeParams: true});
 
 router
@@ -9,5 +9,9 @@ router
 router
   .route('/')
   .get(getAllPhotos)
+
+router
+  .route('/searchPhotos')
+  .post(searchAllPhotos)
 
 export default router;

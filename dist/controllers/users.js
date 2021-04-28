@@ -49,10 +49,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                errors: [{
-                        message: "Email incorrect/Email not found.",
-                        field: "email"
-                    }]
+                errors: {
+                    message: "Email incorrect/Email not found.",
+                    field: "email"
+                }
             });
         }
         ;
@@ -60,10 +60,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!isValid) {
             return res.status(401).json({
                 success: false,
-                errors: [{
-                        message: "Incorrect password",
-                        field: "password"
-                    }]
+                errors: {
+                    message: "Incorrect password",
+                    field: "password"
+                }
             });
         }
         ;
@@ -123,7 +123,7 @@ const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         return res.status(200).json({
             success: true,
-            data: user
+            user
         });
     }
     catch (error) {

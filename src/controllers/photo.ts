@@ -41,24 +41,49 @@ export const addPhoto = async(req: Request, res: Response) => {
 
     return res.status(201).json({
       success: true,
-      data: photo
+      photo
     })
   }) 
 };
 
 //  **** GET ALL PHOTOS ****
 export const getAllPhotos = async(req: Request, res: Response) => {
-
    try { 
      const photos = await prisma.photo.findMany();
      return res.status(200).json({
         success: true,
-        data: photos
+        photos
       });
    }
    catch(err) {
     console.log(err);
     return res.status(500).json({
+      error: err
+    })
+   }
+}
+//  **** SEARCH ALL PHOTOS ****
+export const searchAllPhotos = async(req: Request, res: Response) => {
+
+  //take string from req, maybe req.searchString or something
+   try { 
+     const photos = await prisma.photo.findMany({
+       where: {
+         title: {
+           //put whatever the request string is here
+           contains: req.body.searchString
+         }
+       }
+
+     });
+     return res.status(200).json({
+        success: true,
+        photos
+      });
+   }
+   catch(err) {
+    console.log(err);
+      return res.status(500).json({
       error: err
     })
    }
