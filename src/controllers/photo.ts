@@ -14,10 +14,10 @@ export const addPhoto = async(req: Request, res: Response) => {
   if(!user){
     return res.status(401).json({
       success: false,
-      errors: [{
+      errors: {
         field: "authorization",
         message: "You must be logged in to continue."
-      }] 
+      } 
     })
   };
 
@@ -86,6 +86,44 @@ export const searchAllPhotos = async(req: Request, res: Response) => {
       return res.status(500).json({
       error: err
     })
-   }
-   
+   } 
+}
+
+// **** GET MY PHOTOS ****
+
+export const getMyPhotos = async(req: Request, res: Response) => {
+  if(!req.session.userId) {
+    return res.status(401).json({
+      success: false,
+      error: {
+        field: "session",
+        message: "Your session has expired, please login again."
+      }
+    })
+  };
+  try {
+    const photos = await prisma.user.findUnique({
+      where: {
+        id: req.session.userId
+      },
+      select: {
+        photos: true,
+        id: false,
+        email: false,
+        password: false,
+        name: false,        
+      }
+    })
+    return res.status(200).json({
+      success: true,
+      photos
+    })
+  } 
+  catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
 }

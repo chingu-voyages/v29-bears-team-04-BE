@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
+exports.getMyPhotos = exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
 const multer_1 = __importDefault(require("../utils/multer"));
 const index_1 = require("../index");
 const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,10 +26,10 @@ const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!user) {
         return res.status(401).json({
             success: false,
-            errors: [{
-                    field: "authorization",
-                    message: "You must be logged in to continue."
-                }]
+            errors: {
+                field: "authorization",
+                message: "You must be logged in to continue."
+            }
         });
     }
     ;
@@ -95,4 +95,41 @@ const searchAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.searchAllPhotos = searchAllPhotos;
+const getMyPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.session.userId) {
+        return res.status(401).json({
+            success: false,
+            error: {
+                field: "session",
+                message: "Your session has expired, please login again."
+            }
+        });
+    }
+    ;
+    try {
+        const photos = yield index_1.prisma.user.findUnique({
+            where: {
+                id: req.session.userId
+            },
+            select: {
+                photos: true,
+                id: false,
+                email: false,
+                password: false,
+                name: false,
+            }
+        });
+        return res.status(200).json({
+            success: true,
+            photos
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error
+        });
+    }
+});
+exports.getMyPhotos = getMyPhotos;
 //# sourceMappingURL=photo.js.map
