@@ -101,6 +101,7 @@ export const getMyPhotos = async(req: Request, res: Response) => {
       }
     })
   };
+  
   try {
     const photos = await prisma.user.findUnique({
       where: {
@@ -120,6 +121,43 @@ export const getMyPhotos = async(req: Request, res: Response) => {
     })
   } 
   catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
+}
+
+// **** UPDATE PHOTO ****
+
+//First we check if the photo exists, then we check if the user owns the photo, then we update the information
+export const updatePhoto = async(req: Request, res: Response) => {
+  if(!user){
+    return res.status(401).json({
+      success: false,
+      errors: {
+        field: "authorization",
+        message: "You must be logged in to continue."
+      } 
+    })
+  };
+  try {
+    const photo = await prisma.photo.update({
+      
+      data: {
+        ...req.body
+      },
+      where: {
+        id: req.session.userId
+      },
+      
+    });
+    return res.status(200).json({
+      success: true,
+      message: 'user information updated'
+    })
+  } catch (error) {
     return res.status(500).json({
       success: false,
       error: error

@@ -5,6 +5,17 @@ import { RouteArgs } from '../types/routeArgs';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 
+const checkSessionExpired = (req: Request, res: Response) => {
+   if(!req.session.userId) {
+    return res.status(401).json({
+      success: false,
+      error: {
+        field: "session",
+        message: "Your session has expired, please login again."
+      }
+    })
+  };
+}
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -99,15 +110,7 @@ export const logout = async(req: Request, res: Response) => {
 // **** GET ME ****
 
 export const me = async(req: Request, res: Response) => {
-  if(!req.session.userId) {
-    return res.status(401).json({
-      success: false,
-      error: {
-        field: "session",
-        message: "Your session has expired, please login again."
-      }
-    })
-  };
+  checkSessionExpired(req, res)
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -156,4 +159,62 @@ export const getAllUsers = async (args: RouteArgs) => {
       error: error
     })
   }
+}
+
+// **** Update Password Information ****
+
+
+// **** Update User Information ****
+
+export const updateUser = async(req: Request, res: Response) => {
+  //check if password in request body
+  checkSessionExpired(req, res)
+  try {
+    const user = await prisma.user.update({
+      //I'm not entirely sure how to build this update query
+      //I want it to be optional updates, so if the property exists in the request, it will update, otherwise it won't.
+      //Is that smart? Do we need to check what we're updating? Maybe later?
+      data: {
+        ...req.body
+      },
+      where: {
+        id: req.session.userId
+      },
+      
+    });
+    return res.status(200).json({
+      success: true,
+      message: 'user information updated'
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
+}
+
+// **** Delete User Information ****
+
+export const deleteUser = async(req: Request, res: Response) => {
+  checkSessionExpired(req, res)
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: req.session.userId
+      },
+      
+    });
+    return res.status(200).json({
+      success: true,
+      message: 'user deleted'
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+
 }
