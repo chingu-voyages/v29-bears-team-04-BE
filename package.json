@@ -37,6 +37,7 @@
     "multer-s3": "^2.9.0",
     "pg": "^8.5.1",
     "prisma": "^2.20.1",
+    "redis-server": "^1.2.2",
     "typescript": "^4.2.4"
   }
 }

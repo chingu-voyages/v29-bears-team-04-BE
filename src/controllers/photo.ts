@@ -5,6 +5,7 @@ import { prisma } from '../index';
 export const addPhoto = async(req: Request, res: Response) => {
   const singleUpload = upload.single('image');
   const { title } = req.body;
+  
   const user = await prisma.user.findUnique({
     where: {
       id: req.session.userId
@@ -52,16 +53,18 @@ export const getAllPhotos = async(req: Request, res: Response) => {
      const photos = await prisma.photo.findMany();
      return res.status(200).json({
         success: true,
-        photos
+        photos,
       });
    }
    catch(err) {
     console.log(err);
     return res.status(500).json({
       error: err
+      message: 'Photo retrieval failed'
     })
    }
 }
+
 //  **** SEARCH ALL PHOTOS ****
 export const searchAllPhotos = async(req: Request, res: Response) => {
 
@@ -90,7 +93,6 @@ export const searchAllPhotos = async(req: Request, res: Response) => {
 }
 
 // **** GET MY PHOTOS ****
-
 export const getMyPhotos = async(req: Request, res: Response) => {
   if(!req.session.userId) {
     return res.status(401).json({
@@ -155,7 +157,7 @@ export const updatePhoto = async(req: Request, res: Response) => {
     });
     return res.status(200).json({
       success: true,
-      message: 'user information updated'
+      message: 'photo information updated'
     })
   } catch (error) {
     return res.status(500).json({

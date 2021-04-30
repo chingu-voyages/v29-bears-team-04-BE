@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMyPhotos = exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
+exports.updatePhoto = exports.getMyPhotos = exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
 const multer_1 = __importDefault(require("../utils/multer"));
 const index_1 = require("../index");
 const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -62,13 +62,14 @@ const getAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const photos = yield index_1.prisma.photo.findMany();
         return res.status(200).json({
             success: true,
-            photos
+            photos,
         });
     }
     catch (err) {
         console.log(err);
         return res.status(500).json({
-            error: err
+            error: err,
+            message: 'Photo retrieval failed'
         });
     }
 });
@@ -132,4 +133,35 @@ const getMyPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getMyPhotos = getMyPhotos;
+const updatePhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!user) {
+        return res.status(401).json({
+            success: false,
+            errors: {
+                field: "authorization",
+                message: "You must be logged in to continue."
+            }
+        });
+    }
+    ;
+    try {
+        const photo = yield index_1.prisma.photo.update({
+            data: Object.assign({}, req.body),
+            where: {
+                id: req.session.userId
+            },
+        });
+        return res.status(200).json({
+            success: true,
+            message: 'photo information updated'
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error
+        });
+    }
+});
+exports.updatePhoto = updatePhoto;
 //# sourceMappingURL=photo.js.map

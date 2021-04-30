@@ -16,9 +16,11 @@ const checkSessionExpired = (req: Request, res: Response) => {
     })
   };
 }
+
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+ 
   const hashedPassword = await argon2.hash(password);
   try {
     const newUser: User = await prisma.user.create({
@@ -41,7 +43,6 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 //  **** LOGIN ****
-
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -88,7 +89,6 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // **** LOGOUT ****
-
 export const logout = async(req: Request, res: Response) => {
   return new Promise((resolve) => {
     req.session.destroy((err) => {
@@ -108,7 +108,6 @@ export const logout = async(req: Request, res: Response) => {
 }
 
 // **** GET ME ****
-
 export const me = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
   try {
@@ -137,7 +136,6 @@ export const me = async(req: Request, res: Response) => {
 }
 
 // **** GET ALL USERS ****
-
 export const getAllUsers = async (args: RouteArgs) => {
   const { res } = args;
   try {
@@ -160,12 +158,11 @@ export const getAllUsers = async (args: RouteArgs) => {
     })
   }
 }
-
 // **** Update Password Information ****
 
 
-// **** Update User Information ****
 
+// **** Update User Information ****
 export const updateUser = async(req: Request, res: Response) => {
   //check if password in request body
   checkSessionExpired(req, res)
@@ -196,7 +193,6 @@ export const updateUser = async(req: Request, res: Response) => {
 }
 
 // **** Delete User Information ****
-
 export const deleteUser = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
   try {
