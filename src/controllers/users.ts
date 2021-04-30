@@ -4,18 +4,8 @@ import { prisma } from '../index';
 import { RouteArgs } from '../types/routeArgs';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
+import { checkSessionExpired } from '../utils/checkSession';
 
-const checkSessionExpired = (req: Request, res: Response) => {
-   if(!req.session.userId) {
-    return res.status(401).json({
-      success: false,
-      error: {
-        field: "session",
-        message: "Your session has expired, please login again."
-      }
-    })
-  };
-}
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -164,7 +154,7 @@ export const getAllUsers = async (args: RouteArgs) => {
 // **** Update Password Information ****
 
 
-// **** Update User Information ****
+// **** Update User Information : NEED TO TEST ****
 
 export const updateUser = async(req: Request, res: Response) => {
   //check if password in request body
@@ -180,11 +170,17 @@ export const updateUser = async(req: Request, res: Response) => {
       where: {
         id: req.session.userId
       },
-      
+      select: {
+        email: true,
+        name: true,
+        id: true,
+        password: false
+      }
     });
     return res.status(200).json({
       success: true,
-      message: 'user information updated'
+      message: 'user information updated',
+      user,
     })
   } catch (error) {
     return res.status(500).json({
@@ -192,10 +188,9 @@ export const updateUser = async(req: Request, res: Response) => {
       error: error
     })
   }
-
 }
 
-// **** Delete User Information ****
+// **** Delete User Information: TEST NEEDED ****
 
 export const deleteUser = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
@@ -204,7 +199,6 @@ export const deleteUser = async(req: Request, res: Response) => {
       where: {
         id: req.session.userId
       },
-      
     });
     return res.status(200).json({
       success: true,
@@ -216,5 +210,4 @@ export const deleteUser = async(req: Request, res: Response) => {
       error: error
     })
   }
-
 }

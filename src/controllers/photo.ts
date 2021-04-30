@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import upload from '../utils/multer';
 import { prisma } from '../index';
+import { checkSessionExpired } from '../utils/checkSession';
 
 export const addPhoto = async(req: Request, res: Response) => {
   const singleUpload = upload.single('image');
@@ -129,19 +130,11 @@ export const getMyPhotos = async(req: Request, res: Response) => {
 
 }
 
-// **** UPDATE PHOTO ****
+// **** UPDATE PHOTO: NEED TO TEST ****
 
 //First we check if the photo exists, then we check if the user owns the photo, then we update the information
 export const updatePhoto = async(req: Request, res: Response) => {
-  if(!user){
-    return res.status(401).json({
-      success: false,
-      errors: {
-        field: "authorization",
-        message: "You must be logged in to continue."
-      } 
-    })
-  };
+  checkSessionExpired(req, res);
   try {
     const photo = await prisma.photo.update({
       
@@ -155,7 +148,7 @@ export const updatePhoto = async(req: Request, res: Response) => {
     });
     return res.status(200).json({
       success: true,
-      message: 'user information updated'
+      message: 'photo information updated'
     })
   } catch (error) {
     return res.status(500).json({
