@@ -6,21 +6,6 @@ import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 import { checkSessionExpired } from '../utils/checkSession';
 
-<<<<<<< HEAD
-=======
-const checkSessionExpired = (req: Request, res: Response) => {
-   if(!req.session.userId) {
-    return res.status(401).json({
-      success: false,
-      error: {
-        field: "session",
-        message: "Your session has expired, please login again."
-      }
-    })
-  };
-}
-
->>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -162,13 +147,8 @@ export const getAllUsers = async (args: RouteArgs) => {
     })
   }
 }
-// **** Update Password Information ****
 
-
-<<<<<<< HEAD
 // **** Update User Information : NEED TO TEST ****
-=======
->>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 
 // **** Update User Information ****
 export const updateUser = async(req: Request, res: Response) => {
@@ -204,13 +184,11 @@ export const updateUser = async(req: Request, res: Response) => {
     })
   }
 }
-
-<<<<<<< HEAD
 // **** Delete User Information: TEST NEEDED ****
 
-=======
+
 // **** Delete User Information ****
->>>>>>> 490312a885033417524972fed45373d85ac0ccdb
+
 export const deleteUser = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
   try {
