@@ -16,7 +16,22 @@ exports.deleteUser = exports.updateUser = exports.getAllUsers = exports.me = exp
 const index_1 = require("../index");
 const argon2_1 = __importDefault(require("argon2"));
 const constants_1 = require("../constants");
+<<<<<<< HEAD
 const checkSession_1 = require("../utils/checkSession");
+=======
+const checkSessionExpired = (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({
+            success: false,
+            error: {
+                field: "session",
+                message: "Your session has expired, please login again."
+            }
+        });
+    }
+    ;
+};
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     const hashedPassword = yield argon2_1.default.hash(password);
@@ -100,7 +115,11 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.logout = logout;
 const me = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+<<<<<<< HEAD
     checkSession_1.checkSessionExpired(req, res);
+=======
+    checkSessionExpired(req, res);
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
     try {
         const user = yield index_1.prisma.user.findUnique({
             where: {
@@ -151,13 +170,18 @@ const getAllUsers = (args) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getAllUsers = getAllUsers;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+<<<<<<< HEAD
     checkSession_1.checkSessionExpired(req, res);
+=======
+    checkSessionExpired(req, res);
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
     try {
         const user = yield index_1.prisma.user.update({
             data: Object.assign({}, req.body),
             where: {
                 id: req.session.userId
             },
+<<<<<<< HEAD
             select: {
                 email: true,
                 name: true,
@@ -169,6 +193,12 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             success: true,
             message: 'user information updated',
             user,
+=======
+        });
+        return res.status(200).json({
+            success: true,
+            message: 'user information updated'
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
         });
     }
     catch (error) {
@@ -180,7 +210,11 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.updateUser = updateUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+<<<<<<< HEAD
     checkSession_1.checkSessionExpired(req, res);
+=======
+    checkSessionExpired(req, res);
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
     try {
         const user = yield index_1.prisma.user.delete({
             where: {

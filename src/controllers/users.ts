@@ -6,9 +6,25 @@ import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
 import { checkSessionExpired } from '../utils/checkSession';
 
+<<<<<<< HEAD
+=======
+const checkSessionExpired = (req: Request, res: Response) => {
+   if(!req.session.userId) {
+    return res.status(401).json({
+      success: false,
+      error: {
+        field: "session",
+        message: "Your session has expired, please login again."
+      }
+    })
+  };
+}
+
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+ 
   const hashedPassword = await argon2.hash(password);
   try {
     const newUser: User = await prisma.user.create({
@@ -31,7 +47,6 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 //  **** LOGIN ****
-
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -78,7 +93,6 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // **** LOGOUT ****
-
 export const logout = async(req: Request, res: Response) => {
   return new Promise((resolve) => {
     req.session.destroy((err) => {
@@ -98,7 +112,6 @@ export const logout = async(req: Request, res: Response) => {
 }
 
 // **** GET ME ****
-
 export const me = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
   try {
@@ -127,7 +140,6 @@ export const me = async(req: Request, res: Response) => {
 }
 
 // **** GET ALL USERS ****
-
 export const getAllUsers = async (args: RouteArgs) => {
   const { res } = args;
   try {
@@ -150,12 +162,15 @@ export const getAllUsers = async (args: RouteArgs) => {
     })
   }
 }
-
 // **** Update Password Information ****
 
 
+<<<<<<< HEAD
 // **** Update User Information : NEED TO TEST ****
+=======
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 
+// **** Update User Information ****
 export const updateUser = async(req: Request, res: Response) => {
   //check if password in request body
   checkSessionExpired(req, res)
@@ -190,8 +205,12 @@ export const updateUser = async(req: Request, res: Response) => {
   }
 }
 
+<<<<<<< HEAD
 // **** Delete User Information: TEST NEEDED ****
 
+=======
+// **** Delete User Information ****
+>>>>>>> 490312a885033417524972fed45373d85ac0ccdb
 export const deleteUser = async(req: Request, res: Response) => {
   checkSessionExpired(req, res)
   try {
