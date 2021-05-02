@@ -60,7 +60,7 @@ export const getAllPhotos = async(req: Request, res: Response) => {
    catch(err) {
     console.log(err);
     return res.status(500).json({
-      error: err
+      error: err,
       message: 'Photo retrieval failed'
     })
    }
@@ -116,6 +116,7 @@ export const getMyPhotos = async(req: Request, res: Response) => {
         email: false,
         password: false,
         name: false,        
+     
       }
     })
     return res.status(200).json({
@@ -132,31 +133,55 @@ export const getMyPhotos = async(req: Request, res: Response) => {
 
 }
 
-// **** UPDATE PHOTO: NEED TO TEST ****
+// **** UPDATE PHOTO ****
 
 //First we check if the photo exists, then we check if the user owns the photo, then we update the information
 export const updatePhoto = async(req: Request, res: Response) => {
+  //I wasn't logged and didn't know, why? 
   checkSessionExpired(req, res);
-  try {
-    const photo = await prisma.photo.update({
-      
-      data: {
-        ...req.body
-      },
-      where: {
-        id: req.session.userId
-      },
-      
-    });
-    return res.status(200).json({
-      success: true,
-      message: 'photo information updated'
-    })
-  } catch (error) {
+  const { id, title } = req.body;
+  try { 
+     const user = await prisma.user.update({
+        where: {
+          id: req.session.userId,
+        },
+        data: {
+          photos: {
+            update: {
+              where: {
+                id: id,
+              },
+              data: {
+                title: title,
+              },
+            },
+          },
+        },
+        //Should we return exactly what we updated here? Or just forget about that?
+        select: {
+          id: false,
+          email: false,
+          password: false,
+          name: false,
+          photos: {
+            where: {
+              id: id
+            },          
+          }
+        }
+      })
+     return res.status(200).json({
+        success: true,
+        message: 'Photo update succeeded'
+        user,
+      });
+   }
+   catch(err) {
+    console.log(err);
     return res.status(500).json({
-      success: false,
-      error: error
+      error: err,
+      message: 'Photo update failed'
     })
-  }
+   }
 
 }

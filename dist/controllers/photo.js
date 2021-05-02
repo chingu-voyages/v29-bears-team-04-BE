@@ -135,36 +135,48 @@ const getMyPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getMyPhotos = getMyPhotos;
 const updatePhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-<<<<<<< HEAD
     checkSession_1.checkSessionExpired(req, res);
-=======
-    if (!user) {
-        return res.status(401).json({
-            success: false,
-            errors: {
-                field: "authorization",
-                message: "You must be logged in to continue."
-            }
-        });
-    }
-    ;
->>>>>>> 490312a885033417524972fed45373d85ac0ccdb
+    const { id, title } = req.body;
     try {
-        const photo = yield index_1.prisma.photo.update({
-            data: Object.assign({}, req.body),
+        const user = yield index_1.prisma.user.update({
             where: {
-                id: req.session.userId
+                id: req.session.userId,
             },
+            data: {
+                photos: {
+                    update: {
+                        where: {
+                            id: id,
+                        },
+                        data: {
+                            title: title,
+                        },
+                    },
+                },
+            },
+            select: {
+                id: false,
+                email: false,
+                password: false,
+                name: false,
+                photos: {
+                    where: {
+                        id: id
+                    },
+                }
+            }
         });
         return res.status(200).json({
             success: true,
-            message: 'photo information updated'
+            message: 'Photo update succeeded',
+            user,
         });
     }
-    catch (error) {
+    catch (err) {
+        console.log(err);
         return res.status(500).json({
-            success: false,
-            error: error
+            error: err,
+            message: 'Photo update failed'
         });
     }
 });
