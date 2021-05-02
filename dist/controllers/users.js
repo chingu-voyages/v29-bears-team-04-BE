@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.getAllUsers = exports.me = exports.logout = exports.login = exports.registerUser = void 0;
+exports.searchAllUsers = exports.deleteUser = exports.updateUser = exports.getAllUsers = exports.me = exports.logout = exports.login = exports.registerUser = void 0;
 const index_1 = require("../index");
 const argon2_1 = __importDefault(require("argon2"));
 const constants_1 = require("../constants");
@@ -200,4 +200,43 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+const searchAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield index_1.prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: req.body.searchString,
+                            mode: "insensitive"
+                        },
+                    },
+                    {
+                        email: {
+                            contains: req.body.searchString,
+                            mode: "insensitive"
+                        },
+                    },
+                ],
+            },
+            select: {
+                email: true,
+                name: true,
+                id: true,
+                password: false
+            }
+        });
+        return res.status(200).json({
+            success: true,
+            users
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: err
+        });
+    }
+});
+exports.searchAllUsers = searchAllUsers;
 //# sourceMappingURL=users.js.map

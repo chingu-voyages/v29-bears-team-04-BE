@@ -208,3 +208,47 @@ export const deleteUser = async(req: Request, res: Response) => {
     })
   }
 }
+
+//  **** SEARCH ALL Users ****
+
+export const searchAllUsers = async(req: Request, res: Response) => {
+ 
+  //take string from req, maybe req.searchString or something
+   try { 
+     const users = await prisma.user.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains:  req.body.searchString,
+                mode: "insensitive"
+              },
+            },
+            {
+              email: {
+                contains:  req.body.searchString,
+                mode: "insensitive"
+              },
+            },
+          ],
+        },
+        select: {
+          email: true,
+          name: true,
+          id: true,
+          password: false
+        }
+        
+     });
+     return res.status(200).json({
+        success: true,
+        users
+      });
+   }
+   catch(err) {
+    console.log(err);
+      return res.status(500).json({
+      error: err
+    })
+   } 
+}

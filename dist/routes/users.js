@@ -27,5 +27,8 @@ router
 router
     .route('/delete')
     .post(users_1.deleteUser);
+router
+    .route('/search')
+    .post(users_1.searchAllUsers);
 exports.default = router;
 //# sourceMappingURL=users.js.map
