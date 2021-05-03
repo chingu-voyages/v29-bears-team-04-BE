@@ -11,7 +11,7 @@ import { seedDB } from './utils/seedDB.js'
 export const prisma = new PrismaClient();
 const app = express();
 
-const main = async() => {
+const main = async() => { 
   // Redis:
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);

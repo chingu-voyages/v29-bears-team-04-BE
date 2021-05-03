@@ -187,6 +187,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 id: req.session.userId
             },
         });
+        yield exports.logout(req, res);
         return res.status(200).json({
             success: true,
             message: 'user deleted'
