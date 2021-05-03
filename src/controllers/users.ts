@@ -200,6 +200,7 @@ export const deleteUser = async(req: Request, res: Response) => {
         id: req.session.userId
       },
     });
+    await logout(req, res);
     return res.status(200).json({
       success: true,
       message: 'user deleted'

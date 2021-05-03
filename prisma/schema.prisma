@@ -23,8 +23,8 @@ model Photo {
   id            Int           @default(autoincrement()) @id
   title         String
   imageUrl      String   
-  author        User          @relation(fields: [authorId], references: [id])
-  authorId      Int
+  author        User?          @relation(fields: [authorId], references: [id])
+  authorId      Int?
   collections   Collection[]
 }
 
