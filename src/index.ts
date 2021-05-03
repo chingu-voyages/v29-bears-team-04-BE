@@ -19,7 +19,10 @@ const main = async() => {
   app.use(express.json());
   // Cors Config:
   app.use(
-    cors()
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true
+    })
   );
   // Express session config:
   app.set("trust proxy", 1);
@@ -32,7 +35,7 @@ const main = async() => {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years,
-        // httpOnly: true,
+        httpOnly: true,
         // sameSite: 'lax',
         // secure: __prod__,
         // domain: __prod__ ? ".herokuapp.com" : undefined,
