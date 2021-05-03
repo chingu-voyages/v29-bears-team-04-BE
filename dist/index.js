@@ -32,6 +32,12 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         origin: 'http://localhost:3000',
         credentials: true
     }));
+    app.use(function (req, res, next) {
+        res.header('Access-Control-Allow-Headers', 'Origin, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
+        res.header('Access-Control-Allow-Credentials', 'true');
+        next();
+    });
     app.set("trust proxy", 1);
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,
