@@ -25,9 +25,6 @@ router
     .route('/update')
     .post(users_1.updateUser);
 router
-    .route('/delete')
-    .post(users_1.deleteUser);
-router
     .route('/search')
     .post(users_1.searchAllUsers);
 exports.default = router;

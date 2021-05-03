@@ -186,7 +186,10 @@ export const updateUser = async(req: Request, res: Response) => {
 }
 // **** Delete User Information: TEST NEEDED ****
 
-
+//Should we require a password POST request for user delete? 
+//Error P2014, it's saying that the relation photoUser exists, so we can't delete it
+//https://stackoverflow.com/questions/64077000/how-to-delete-relational-item-in-prisma2
+//Cascading delete should be added
 // **** Delete User Information ****
 
 export const deleteUser = async(req: Request, res: Response) => {
