@@ -11,27 +11,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.seedDB = void 0;
 const index_1 = require("../index");
-const seedDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    for (let i = 0; i < 25; i++) {
-        yield index_1.prisma.photo.create({
-            data: {
-                title: "Title" + i,
-                imageUrl: "https://source.unsplash.com/random",
-                author: {
-                    connect: { id: 1 }
-                }
+const seedDB = (i) => __awaiter(void 0, void 0, void 0, function* () {
+    yield index_1.prisma.photo.create({
+        data: {
+            title: "Title" + i,
+            imageUrl: "https://source.unsplash.com/random",
+            author: {
+                connect: { id: 2 }
             }
-        });
-        yield index_1.prisma.photo.create({
-            data: {
-                title: "Title" + i,
-                imageUrl: "https://source.unsplash.com/random",
-                author: {
-                    connect: { id: 3 }
-                }
+        }
+    });
+    yield index_1.prisma.photo.create({
+        data: {
+            title: "Title" + i,
+            imageUrl: "https://source.unsplash.com/weekly",
+            author: {
+                connect: { id: 3 }
             }
-        });
-    }
+        }
+    });
 });
 exports.seedDB = seedDB;
 //# sourceMappingURL=seedDB.js.map

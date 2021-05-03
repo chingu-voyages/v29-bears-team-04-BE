@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import upload from '../utils/multer';
 import { prisma } from '../index';
+import { checkSessionExpired } from '../utils/checkSession';
 
 export const addPhoto = async(req: Request, res: Response) => {
   const singleUpload = upload.single('image');
   const { title } = req.body;
+  
   const user = await prisma.user.findUnique({
     where: {
       id: req.session.userId
@@ -52,16 +54,18 @@ export const getAllPhotos = async(req: Request, res: Response) => {
      const photos = await prisma.photo.findMany();
      return res.status(200).json({
         success: true,
-        photos
+        photos,
       });
    }
    catch(err) {
     console.log(err);
     return res.status(500).json({
-      error: err
+      error: err,
+      message: 'Photo retrieval failed'
     })
    }
 }
+
 //  **** SEARCH ALL PHOTOS ****
 export const searchAllPhotos = async(req: Request, res: Response) => {
 
@@ -90,7 +94,6 @@ export const searchAllPhotos = async(req: Request, res: Response) => {
 }
 
 // **** GET MY PHOTOS ****
-
 export const getMyPhotos = async(req: Request, res: Response) => {
   if(!req.session.userId) {
     return res.status(401).json({
@@ -101,6 +104,7 @@ export const getMyPhotos = async(req: Request, res: Response) => {
       }
     })
   };
+  
   try {
     const photos = await prisma.user.findUnique({
       where: {
@@ -112,6 +116,7 @@ export const getMyPhotos = async(req: Request, res: Response) => {
         email: false,
         password: false,
         name: false,        
+     
       }
     })
     return res.status(200).json({
@@ -125,5 +130,58 @@ export const getMyPhotos = async(req: Request, res: Response) => {
       error: error
     })
   }
+
+}
+
+// **** UPDATE PHOTO ****
+
+//First we check if the photo exists, then we check if the user owns the photo, then we update the information
+export const updatePhoto = async(req: Request, res: Response) => {
+  //I wasn't logged and didn't know, why? 
+  checkSessionExpired(req, res);
+  const { id, title } = req.body;
+  try { 
+     const user = await prisma.user.update({
+        where: {
+          id: req.session.userId,
+        },
+        data: {
+          photos: {
+            update: {
+              where: {
+                id: id,
+              },
+              data: {
+                title: title,
+              },
+            },
+          },
+        },
+        //Should we return exactly what we updated here? Or just forget about that?
+        select: {
+          id: false,
+          email: false,
+          password: false,
+          name: false,
+          photos: {
+            where: {
+              id: id
+            },          
+          }
+        }
+      })
+     return res.status(200).json({
+        success: true,
+        message: 'Photo update succeeded',
+        user,
+      });
+   }
+   catch(err) {
+    console.log(err);
+    return res.status(500).json({
+      error: err,
+      message: 'Photo update failed'
+    })
+   }
 
 }

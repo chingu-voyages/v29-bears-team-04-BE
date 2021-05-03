@@ -4,10 +4,12 @@ import { prisma } from '../index';
 import { RouteArgs } from '../types/routeArgs';
 import argon2 from 'argon2';
 import { COOKIE_NAME } from '../constants';
+import { checkSessionExpired } from '../utils/checkSession';
 
 // **** REGISTER ****
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
+ 
   const hashedPassword = await argon2.hash(password);
   try {
     const newUser: User = await prisma.user.create({
@@ -30,7 +32,6 @@ export const registerUser = async (req: Request, res: Response) => {
 };
 
 //  **** LOGIN ****
-
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -77,7 +78,6 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // **** LOGOUT ****
-
 export const logout = async(req: Request, res: Response) => {
   return new Promise((resolve) => {
     req.session.destroy((err) => {
@@ -97,17 +97,8 @@ export const logout = async(req: Request, res: Response) => {
 }
 
 // **** GET ME ****
-
 export const me = async(req: Request, res: Response) => {
-  if(!req.session.userId) {
-    return res.status(401).json({
-      success: false,
-      error: {
-        field: "session",
-        message: "Your session has expired, please login again."
-      }
-    })
-  };
+  checkSessionExpired(req, res)
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -134,7 +125,6 @@ export const me = async(req: Request, res: Response) => {
 }
 
 // **** GET ALL USERS ****
-
 export const getAllUsers = async (args: RouteArgs) => {
   const { res } = args;
   try {
@@ -156,4 +146,113 @@ export const getAllUsers = async (args: RouteArgs) => {
       error: error
     })
   }
+}
+
+// **** Update User Information : NEED TO TEST ****
+
+// **** Update User Information ****
+export const updateUser = async(req: Request, res: Response) => {
+  //check if password in request body
+  checkSessionExpired(req, res)
+  try {
+    const user = await prisma.user.update({
+      //I'm not entirely sure how to build this update query
+      //I want it to be optional updates, so if the property exists in the request, it will update, otherwise it won't.
+      //Is that smart? Do we need to check what we're updating? Maybe later?
+      data: {
+        ...req.body
+      },
+      where: {
+        id: req.session.userId
+      },
+      select: {
+        email: true,
+        name: true,
+        id: true,
+        password: false
+      }
+    });
+    return res.status(200).json({
+      success: true,
+      message: 'user information updated',
+      user,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+}
+// **** Delete User Information: TEST NEEDED ****
+
+//Should we require a password POST request for user delete? 
+//Error P2014, it's saying that the relation photoUser exists, so we can't delete it
+//https://stackoverflow.com/questions/64077000/how-to-delete-relational-item-in-prisma2
+//Cascading delete should be added
+// **** Delete User Information ****
+
+export const deleteUser = async(req: Request, res: Response) => {
+  checkSessionExpired(req, res)
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: req.session.userId
+      },
+    });
+    await logout(req, res);
+    return res.status(200).json({
+      success: true,
+      message: 'user deleted'
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: error
+    })
+  }
+}
+
+//  **** SEARCH ALL Users ****
+
+export const searchAllUsers = async(req: Request, res: Response) => {
+ 
+  //take string from req, maybe req.searchString or something
+   try { 
+     const users = await prisma.user.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains:  req.body.searchString,
+                mode: "insensitive"
+              },
+            },
+            {
+              email: {
+                contains:  req.body.searchString,
+                mode: "insensitive"
+              },
+            },
+          ],
+        },
+        select: {
+          email: true,
+          name: true,
+          id: true,
+          password: false
+        }
+        
+     });
+     return res.status(200).json({
+        success: true,
+        users
+      });
+   }
+   catch(err) {
+    console.log(err);
+      return res.status(500).json({
+      error: err
+    })
+   } 
 }
