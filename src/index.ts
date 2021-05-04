@@ -7,7 +7,7 @@ import session from 'express-session';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 import { COOKIE_NAME, __prod__ } from './constants';
-import { seedDB } from './utils/seedDB.js'
+import { seedDB } from './utils/seedDB.js';
 export const prisma = new PrismaClient();
 const app = express();
 
@@ -25,12 +25,11 @@ const main = async() => {
     })
   );
   // prevent CORS problems
-  app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Headers', 'Origin, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
-    res.header('Access-Control-Allow-Credentials', 'true');
+  app.use(function(req, res, next) {  
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  })
+  });
   // Express session config:
   app.set("trust proxy", 1);
   app.use(
@@ -42,7 +41,7 @@ const main = async() => {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years,
-        httpOnly: true,
+        // httpOnly: true,
         // sameSite: 'lax',
         // secure: __prod__,
         // domain: __prod__ ? ".herokuapp.com" : undefined,
