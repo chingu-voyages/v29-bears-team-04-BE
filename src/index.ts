@@ -30,7 +30,7 @@ const main = async() => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
-})
+  })
   // Express session config:
   app.set("trust proxy", 1);
   app.use(
