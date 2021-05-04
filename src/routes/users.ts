@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, login, logout, me, getAllUsers } from '../controllers/users';
+import { registerUser, login, logout, me, getAllUsers, updateUser, deleteUser, searchAllUsers } from '../controllers/users';
 const router = express.Router({mergeParams: true});
 
 router
@@ -21,5 +21,17 @@ router
 router
   .route('/me')
   .get(me)
+
+router
+  .route('/update')
+  .post(updateUser)
+
+router
+  .route('/delete')
+  .post(deleteUser)
+
+router
+  .route('/search')
+  .post(searchAllUsers)
 
 export default router;

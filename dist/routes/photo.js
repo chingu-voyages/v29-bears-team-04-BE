@@ -18,5 +18,8 @@ router
 router
     .route('/getMyPhotos')
     .post(photo_1.getMyPhotos);
+router
+    .route('/updatePhoto')
+    .post(photo_1.updatePhoto);
 exports.default = router;
 //# sourceMappingURL=photo.js.map

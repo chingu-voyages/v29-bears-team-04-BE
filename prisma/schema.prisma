@@ -17,12 +17,21 @@ model User {
 }
 
 model Photo {
+<<<<<<< HEAD
   id          Int          @id @default(autoincrement())
   title       String
   imageUrl    String
   authorId    Int
   author      User         @relation(fields: [authorId], references: [id])
   collections Collection[]
+=======
+  id            Int           @default(autoincrement()) @id
+  title         String
+  imageUrl      String   
+  author        User?          @relation(fields: [authorId], references: [id])
+  authorId      Int?
+  collections   Collection[]
+>>>>>>> a0b0dc975654b334a55d7f9ec64cf47750bbd54e
 }
 
 model Collection {
