@@ -20,7 +20,7 @@ const main = async() => {
   // Cors Config:
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: 'https://resplashed.herokuapp.com',
       credentials: true
     })
   );
@@ -41,7 +41,7 @@ const main = async() => {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years,
-        httpOnly: false
+        httpOnly: false 
         // sameSite: 'lax',
         // secure: __prod__,
         // domain: __prod__ ? ".herokuapp.com" : undefined,
