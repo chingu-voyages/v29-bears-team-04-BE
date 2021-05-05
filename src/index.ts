@@ -21,7 +21,7 @@ const main = async() => {
   app.use(
     cors({
       origin: 'https://resplashed.herokuapp.com' || 'http://localhost:3000',
-      credentials: true
+      credentials: true,
     })
   );
   // prevent CORS problems
@@ -42,8 +42,8 @@ const main = async() => {
       }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years,
-        httpOnly: false 
-        // sameSite: 'lax',
+        httpOnly: false, 
+        sameSite: 'none',
         // secure: __prod__,
         // domain: __prod__ ? ".herokuapp.com" : undefined,
       },
