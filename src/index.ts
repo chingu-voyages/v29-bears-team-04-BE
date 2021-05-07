@@ -20,7 +20,7 @@ const main = async() => {
   // Cors Config:
   app.use(
     cors({
-      origin: 'https://resplashed.herokuapp.com' || 'http://localhost:3000',
+      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
       credentials: true,
     })
   );
