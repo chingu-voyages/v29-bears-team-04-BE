@@ -16,6 +16,7 @@ const seedDB = (i) => __awaiter(void 0, void 0, void 0, function* () {
         data: {
             title: "Title" + i,
             imageUrl: "https://source.unsplash.com/random",
+            category: "Nature",
             author: {
                 connect: { id: 2 }
             }
@@ -24,6 +25,7 @@ const seedDB = (i) => __awaiter(void 0, void 0, void 0, function* () {
     yield index_1.prisma.photo.create({
         data: {
             title: "Title" + i,
+            category: "Space",
             imageUrl: "https://source.unsplash.com/weekly",
             author: {
                 connect: { id: 3 }

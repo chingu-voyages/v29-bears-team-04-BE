@@ -5,7 +5,7 @@ import { checkSessionExpired } from "../utils/checkSession";
 
 export const addPhoto = async (req: Request, res: Response) => {
   const singleUpload = upload.single("image");
-  const { title } = req.body;
+  const { title, category } = req.body;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -35,6 +35,7 @@ export const addPhoto = async (req: Request, res: Response) => {
       data: {
         title,
         imageUrl: req.file.location,
+        category,
         author: {
           connect: { id: user.id },
         },
@@ -64,6 +65,28 @@ export const getAllPhotos = async (req: Request, res: Response) => {
     });
   }
 };
+
+//  **** GET CATEGORY PHOTOS **** 
+export const getCategoryPhotos = async(req: Request, res: Response) => {
+  try {
+    const photos = await prisma.photo.findMany({
+      where: {
+        category: req.body.category
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      photos,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      error: err,
+      message: "Photo retrieval failed",
+    });
+  }
+}
+
 
 //  **** SEARCH ALL PHOTOS ****
 export const searchAllPhotos = async (req: Request, res: Response) => {

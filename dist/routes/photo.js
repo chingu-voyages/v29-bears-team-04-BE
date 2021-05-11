@@ -10,6 +10,7 @@ router.route("/add").post(photo_1.addPhoto);
 router.route("/").get(photo_1.getAllPhotos);
 router.route("/searchPhotos").post(photo_1.searchAllPhotos);
 router.route("/getMyPhotos").post(photo_1.getMyPhotos);
+router.route("/getCategoryPhotos").post(photo_1.getCategoryPhotos);
 router.route("/updatePhoto").post(photo_1.updatePhoto);
 router.route("/deletePhoto").post(photo_1.deletePhoto);
 exports.default = router;

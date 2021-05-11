@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePhoto = exports.updatePhoto = exports.getMyPhotos = exports.searchAllPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
+exports.deletePhoto = exports.updatePhoto = exports.getMyPhotos = exports.searchAllPhotos = exports.getCategoryPhotos = exports.getAllPhotos = exports.addPhoto = void 0;
 const multer_1 = __importDefault(require("../utils/multer"));
 const index_1 = require("../index");
 const checkSession_1 = require("../utils/checkSession");
 const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const singleUpload = multer_1.default.single("image");
-    const { title } = req.body;
+    const { title, category } = req.body;
     const user = yield index_1.prisma.user.findUnique({
         where: {
             id: req.session.userId,
@@ -44,6 +44,7 @@ const addPhoto = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             data: {
                 title,
                 imageUrl: req.file.location,
+                category,
                 author: {
                     connect: { id: user.id },
                 },
@@ -73,6 +74,27 @@ const getAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getAllPhotos = getAllPhotos;
+const getCategoryPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const photos = yield index_1.prisma.photo.findMany({
+            where: {
+                category: req.body.category
+            },
+        });
+        return res.status(200).json({
+            success: true,
+            photos,
+        });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            error: err,
+            message: "Photo retrieval failed",
+        });
+    }
+});
+exports.getCategoryPhotos = getCategoryPhotos;
 const searchAllPhotos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const photos = yield index_1.prisma.photo.findMany({

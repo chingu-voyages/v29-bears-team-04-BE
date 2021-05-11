@@ -7,7 +7,6 @@ import session from 'express-session';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 import { COOKIE_NAME, __prod__ } from './constants';
-import { seedDB } from './utils/seedDB.js';
 export const prisma = new PrismaClient();
 const app = express();
 
@@ -64,7 +63,6 @@ const main = async() => {
   app.listen(process.env.PORT || 4000, () => {
     console.log('listening on port 4000')
   })
-  //seedDB();
 };
 
 main().catch((err) => {

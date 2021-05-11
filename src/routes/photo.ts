@@ -6,6 +6,7 @@ import {
   getMyPhotos,
   updatePhoto,
   deletePhoto,
+  getCategoryPhotos
 } from "../controllers/photo";
 const router = express.Router({ mergeParams: true });
 
@@ -16,6 +17,8 @@ router.route("/").get(getAllPhotos);
 router.route("/searchPhotos").post(searchAllPhotos);
 
 router.route("/getMyPhotos").post(getMyPhotos);
+
+router.route("/getCategoryPhotos").post(getCategoryPhotos);
 
 router.route("/updatePhoto").post(updatePhoto);
 
